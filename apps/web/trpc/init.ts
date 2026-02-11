@@ -1,8 +1,9 @@
 import { initTRPC } from "@trpc/server";
 import { cache } from "react";
+import { db } from "@/db";
 
 export const createTRPCContext = cache(async () => {
-	return {};
+	return { db };
 });
 
 const t = initTRPC.create();

@@ -1,3 +1,9 @@
+---
+name: ship
+description: Commit and push changes with a conventional commit message
+disable-model-invocation: true
+---
+
 # /ship — Commit and push changes
 
 Ship the current changes: stage, commit with a conventional commit message, and push.
