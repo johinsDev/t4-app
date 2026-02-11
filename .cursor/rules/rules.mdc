@@ -9,7 +9,7 @@ alwaysApply: true
 ## Monorepo structure
 
 - `apps/web` — Next.js web application (App Router)
-- `packages/ui` — Shared React component library
+  - `components/ui/` — shadcn UI components
 - `packages/typescript-config` — Shared TypeScript configs
 
 ## Code style

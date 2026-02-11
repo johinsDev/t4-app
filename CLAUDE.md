@@ -5,7 +5,7 @@ Monorepo built with Turborepo, Bun, and Next.js.
 ## Monorepo structure
 
 - `apps/web` — Next.js web application (App Router)
-- `packages/ui` — Shared React component library
+  - `components/ui/` — shadcn UI components
 - `packages/typescript-config` — Shared TypeScript configs
 
 ## Commands

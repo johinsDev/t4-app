@@ -24,11 +24,6 @@
 				"tw-animate-css"
 			]
 		},
-		"packages/ui": {
-			"entry": ["src/*.tsx"],
-			"project": ["src/**/*.{ts,tsx}"],
-			"ignoreDependencies": ["react-dom", "@types/react-dom"]
-		},
 		"packages/typescript-config": {
 			"entry": [],
 			"project": [],
