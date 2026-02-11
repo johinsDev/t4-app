@@ -13,39 +13,38 @@ export const trpc = createTRPCReact<AppRouter>();
 let clientQueryClientSingleton: QueryClient;
 
 function getQueryClient() {
-  if (typeof window === "undefined") {
-    return makeQueryClient();
-  }
-  return (clientQueryClientSingleton ??= makeQueryClient());
+	if (typeof window === "undefined") {
+		return makeQueryClient();
+	}
+	if (!clientQueryClientSingleton) {
+		clientQueryClientSingleton = makeQueryClient();
+	}
+	return clientQueryClientSingleton;
 }
 
 function getUrl() {
-  const base = (() => {
-    if (typeof window !== "undefined") return "";
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return "http://localhost:3001";
-  })();
-  return `${base}/api/trpc`;
+	const base = (() => {
+		if (typeof window !== "undefined") return "";
+		if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+		return "http://localhost:3001";
+	})();
+	return `${base}/api/trpc`;
 }
 
-export function TRPCProvider(
-  props: Readonly<{ children: React.ReactNode }>,
-) {
-  const queryClient = getQueryClient();
-  const [trpcClient] = useState(() =>
-    trpc.createClient({
-      links: [
-        httpBatchLink({
-          url: getUrl(),
-        }),
-      ],
-    }),
-  );
-  return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        {props.children}
-      </QueryClientProvider>
-    </trpc.Provider>
-  );
+export function TRPCProvider(props: Readonly<{ children: React.ReactNode }>) {
+	const queryClient = getQueryClient();
+	const [trpcClient] = useState(() =>
+		trpc.createClient({
+			links: [
+				httpBatchLink({
+					url: getUrl(),
+				}),
+			],
+		}),
+	);
+	return (
+		<trpc.Provider client={trpcClient} queryClient={queryClient}>
+			<QueryClientProvider client={queryClient}>{props.children}</QueryClientProvider>
+		</trpc.Provider>
+	);
 }

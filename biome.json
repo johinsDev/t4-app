@@ -1,0 +1,51 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineWidth": 100
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"useButtonType": "off",
+				"useFocusableInteractive": "off",
+				"useSemanticElements": "off",
+				"noLabelWithoutControl": "off",
+				"useAriaPropsForRole": "off"
+			},
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			}
+		}
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+	"css": {
+		"parser": {
+			"cssModules": true,
+			"tailwindDirectives": true
+		},
+		"linter": {
+			"enabled": true
+		}
+	},
+	"files": {
+		"includes": ["**", "!!**/.next", "!!**/dist", "!!**/bun.lock", "!!**/.turbo"]
+	},
+	"overrides": [
+		{
+			"includes": ["apps/web/components/ui/**"],
+			"linter": {
+				"enabled": false
+			}
+		}
+	]
+}
