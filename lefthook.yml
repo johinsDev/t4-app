@@ -1,8 +1,15 @@
 pre-commit:
+  parallel: true
   commands:
     biome:
-      glob: "*.{js,ts,jsx,tsx,json,css}"
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: bunx @biomejs/biome check --staged --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      interactive: true
+    type-check:
+      run: bun run check-types
+    knip:
+      run: bun run knip
+      interactive: true
 
 commit-msg:
   commands:

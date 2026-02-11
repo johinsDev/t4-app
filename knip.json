@@ -3,12 +3,36 @@
 	"workspaces": {
 		".": {},
 		"apps/web": {
-			"entry": ["app/**/page.tsx", "app/**/layout.tsx", "app/**/route.ts"],
-			"project": ["**/*.{ts,tsx}"]
+			"entry": [
+				"app/**/page.tsx",
+				"app/**/layout.tsx",
+				"app/**/route.ts",
+				"components/ui/*.tsx",
+				"hooks/*.ts",
+				"lib/utils.ts",
+				"trpc/*.{ts,tsx}"
+			],
+			"project": ["**/*.{ts,tsx,mjs}"],
+			"ignoreDependencies": [
+				"@hookform/resolvers",
+				"client-only",
+				"date-fns",
+				"postcss",
+				"react-hook-form",
+				"shadcn",
+				"tailwindcss",
+				"tw-animate-css"
+			]
 		},
 		"packages/ui": {
 			"entry": ["src/*.tsx"],
-			"project": ["src/**/*.{ts,tsx}"]
+			"project": ["src/**/*.{ts,tsx}"],
+			"ignoreDependencies": ["react-dom", "@types/react-dom"]
+		},
+		"packages/typescript-config": {
+			"entry": [],
+			"project": [],
+			"ignoreDependencies": ["next"]
 		}
 	}
 }

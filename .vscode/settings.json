@@ -1,0 +1,100 @@
+{
+	// B
+	"better-comments.highlightPlainText": true,
+
+	// C
+	"cSpell.language": "en,es",
+
+	// E
+	// Editor
+	"editor.tabSize": 2,
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"editor.bracketPairColorization.enabled": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	},
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": false,
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
+	"editor.wordWrap": "on",
+	"files.eol": "\n",
+
+	// ErroLens
+	"errorLens.enabled": true,
+
+	// Biome
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[css]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[tailwindcss]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+
+	// F
+	// Files
+	"files.associations": { "*.css": "tailwindcss" },
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"files.trimTrailingWhitespace": true,
+
+	// T
+	// Tailwind CSS IntelliSense
+	"tailwindCSS.includeLanguages": {
+		"typescript": "javascript",
+		"typescriptreact": "javascript",
+		"javascript": "javascript",
+		"javascriptreact": "javascript"
+	},
+	"tailwindCSS.classAttributes": ["class", "className", "class:list", "ngClass"],
+	"tailwindCSS.classFunctions": ["clsx", "cva", "cn", "tw", "classNames"],
+	"tailwindCSS.emmetCompletions": true,
+	"tailwindCSS.suggestions": true,
+	"tailwindCSS.hovers": true,
+	"tailwindCSS.validate": true,
+	"tailwindCSS.colorDecorators": true,
+	"tailwindCSS.showPixelEquivalents": true,
+	"tailwindCSS.experimental.classRegex": [
+		// add regex to getShadowProps
+		["tva\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+		["getShadowProps\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+		[
+			"cva\\([^)]*\\s*,\\s*{[^}]*variants:\\s*{[^}]*}\\s*,\\s*defaultVariants:\\s*{[^}]*}\\s*}[^)]*\\)",
+			"[\"'`]([^\"'`]*).*?[\"'`]"
+		],
+		["clsx\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+		["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+	],
+	"tailwindCSS.experimental.configFile": {
+		"packages/ui/src/styles/globals.css": ["packages/ui/**", "apps/web/**"]
+	},
+
+	"gitlens.ai.generateChangelog.customInstructions": "Generate conventional commit messages: <type>(<scope>): <subject> using types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test. Subject in sentence-case, max 100 chars header, body lines max 100 chars, body max 500 chars, optional body with blank line, use ! for breaking changes.",
+
+	// Git
+	"git.inputValidationLength": 72,
+	"git.inputValidationSubjectLength": 50,
+	"git.useCommitInputAsStashMessage": true
+}
