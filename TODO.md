@@ -20,9 +20,13 @@ sms
 whatsapp
 web push
 app push
+notifications
+
 subscription
 payments
-honojs
 ai-sdk
 csv, pdf
 melisearch
+
+
+honojs
