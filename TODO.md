@@ -1,12 +1,10 @@
-biome
-knip
-lefthook
 drizzle
 better-auth
+redis
 ci/cd
+
 partykit
 trigger
-redis
 storage
 email
 architecture
@@ -16,7 +14,6 @@ shad cd ui
 storybok
 playwright
 vitest
-
 docker
 
 sms
