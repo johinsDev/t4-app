@@ -62,7 +62,7 @@ bun run db:studio      # Open Drizzle Studio GUI
 
 ### Environment variables
 
-Set in `apps/web/.env.local` (gitignored):
+Validated with `@t3-oss/env-nextjs` in `apps/web/env.ts`. Add new env vars there (server/client separated). Set values in `apps/web/.env.local` (gitignored):
 - `DATABASE_URL` — `file:local.db` for local dev, `libsql://...` for Turso
 - `DATABASE_AUTH_TOKEN` — only needed for Turso remote
 
