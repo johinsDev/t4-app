@@ -1,0 +1,81 @@
+---
+description: Project conventions for T4 monorepo
+globs:
+alwaysApply: true
+---
+
+# T4 App — Project Rules
+
+## Monorepo structure
+
+- `apps/web` — Next.js web application (App Router)
+- `packages/ui` — Shared React component library
+- `packages/typescript-config` — Shared TypeScript configs
+
+## Code style
+
+Biome handles ALL formatting and linting. Do NOT manually format code.
+
+- Indent: tabs
+- Line width: 100
+- Import organization: automatic (Biome assist)
+- Linting is disabled for `apps/web/components/ui/**` (shadcn generated components)
+
+After editing files, run: `bunx @biomejs/biome check --write <file>`
+
+## Commit convention (MANDATORY)
+
+All commits MUST follow the Conventional Commits format. Commitlint enforces this via a pre-commit hook (lefthook). Non-conforming commits will be rejected.
+
+Format: `type(scope): description`
+
+Allowed types:
+- `feat` — New feature
+- `fix` — Bug fix
+- `docs` — Documentation only
+- `style` — Code style (formatting, no logic change)
+- `refactor` — Code restructuring (no feature/fix)
+- `perf` — Performance improvement
+- `test` — Adding or updating tests
+- `chore` — Maintenance tasks, dependencies
+- `ci` — CI/CD changes
+- `revert` — Revert a previous commit
+
+Rules:
+- Type is REQUIRED and must be lowercase
+- Scope is optional, in parentheses: `feat(web): ...`
+- Description is REQUIRED, lowercase, no period at end
+- Use imperative mood: "add feature" not "added feature"
+
+Examples:
+- `feat(web): add user authentication`
+- `fix(ui): resolve button hover state`
+- `chore: update dependencies`
+- `refactor(web): extract auth logic into hook`
+
+BAD examples (will be rejected):
+- `Update files` — no type
+- `Feat: add thing` — type must be lowercase
+- `fix: Add thing.` — description should be lowercase, no period
+
+## Commands
+
+```bash
+bun run dev            # Start all apps in dev mode
+bun run build          # Build all apps/packages
+bun run lint           # Biome lint (via Turborepo)
+bun run format         # Biome format (write)
+bun run format:check   # Biome check (lint + format, no write)
+bun run check-types    # TypeScript type checking (via Turborepo)
+bun run knip           # Detect unused code/exports/dependencies
+```
+
+## Git worktree workflow
+
+Use git worktrees for parallel feature development:
+
+```bash
+git worktree add ../t4-app-<branch> -b <branch>
+git worktree list
+git worktree remove ../t4-app-<branch>
+```

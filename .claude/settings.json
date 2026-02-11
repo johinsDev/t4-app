@@ -1,0 +1,26 @@
+{
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Edit|Write",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "file_path=$(echo $CLAUDE_TOOL_INPUT | jq -r '.file_path // empty'); if [[ \"$file_path\" =~ \\.(ts|tsx|js|jsx|json|css)$ ]]; then bunx @biomejs/biome check --write \"$file_path\" 2>/dev/null; fi"
+					}
+				]
+			}
+		],
+		"Stop": [
+			{
+				"matcher": "",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "cd /Users/johan/Documents/personal-projects/t4-app && bunx tsc --noEmit 2>/dev/null || echo 'TypeScript errors found'"
+					}
+				]
+			}
+		]
+	}
+}
