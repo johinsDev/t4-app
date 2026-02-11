@@ -5,7 +5,13 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "declaration": false,
+    "declarationMap": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "**/*.ts",
