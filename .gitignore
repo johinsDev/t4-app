@@ -39,3 +39,4 @@ yarn-error.log*
 
 .claude/settings.local.json
 TODO.md
+apps/web/local.db-*
