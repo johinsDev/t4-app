@@ -27,5 +27,8 @@
 	"workspaces": [
 		"apps/*",
 		"packages/*"
-	]
+	],
+	"dependencies": {
+		"@upstash/redis": "^1.36.2"
+	}
 }

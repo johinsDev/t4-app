@@ -29,7 +29,7 @@ export default function Home() {
 					alt="Turborepo logo"
 					width={180}
 					height={38}
-					priority
+					// priority
 				/>
 				<ol>
 					<li>
@@ -88,3 +88,21 @@ export default function Home() {
 		</div>
 	);
 }
+
+/*
+// ---- Redis Test ------ //
+// "use client";
+
+// import { trpc } from "@/trpc/client";
+
+// export default function Page() {
+//   const { data } = trpc.testRedis.useQuery();
+
+//   return (
+//     <div>
+//       <pre>{JSON.stringify(data, null, 2)}</pre>
+//     </div>
+//   );
+// }
+
+*/
