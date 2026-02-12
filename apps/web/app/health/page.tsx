@@ -60,7 +60,10 @@ export default async function HealthDashboard() {
 						</CardHeader>
 						<CardContent>
 							<div className="text-muted-foreground flex items-center justify-between text-xs">
-								<span>Latency: {check.latencyMs}ms</span>
+								<span>
+									Latency: {check.latencyMs}ms
+									{"provider" in check && ` · ${check.provider}`}
+								</span>
 								<span>{new Date(check.timestamp).toLocaleTimeString()}</span>
 							</div>
 						</CardContent>

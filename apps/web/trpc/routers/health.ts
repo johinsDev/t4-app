@@ -19,6 +19,7 @@ async function measure<T>(fn: () => Promise<T>) {
 export const healthRouter = createTRPCRouter({
 	cache: baseProcedure.query(async () => {
 		const cache = getCache();
+		const provider = getCacheProviderName();
 		const { latencyMs, error } = await measure(async () => {
 			await cache.set("health:ping", "ok");
 			const value = await cache.get("health:ping");
@@ -27,6 +28,7 @@ export const healthRouter = createTRPCRouter({
 		});
 		return {
 			name: "Cache" as const,
+			provider,
 			status: error ? ("error" as const) : ("ok" as const),
 			latencyMs,
 			error,
@@ -46,6 +48,7 @@ export const healthRouter = createTRPCRouter({
 
 	all: baseProcedure.query(async () => {
 		const cache = getCache();
+		const provider = getCacheProviderName();
 		const checks = await Promise.allSettled([
 			(async () => {
 				const { latencyMs, error } = await measure(() => client.execute("SELECT 1"));
@@ -66,6 +69,7 @@ export const healthRouter = createTRPCRouter({
 				});
 				return {
 					name: "Cache" as const,
+					provider,
 					status: error ? ("error" as const) : ("ok" as const),
 					latencyMs,
 					error,
