@@ -4,15 +4,17 @@ import type { CacheProvider } from "./types";
 
 let instance: CacheProvider | null = null;
 
+export function getCacheProviderName(): "upstash" | "memory" {
+	return process.env.CACHE_PROVIDER === "upstash" ? "upstash" : "memory";
+}
+
 export function getCache(): CacheProvider {
 	if (instance) return instance;
 
-	const provider = process.env.CACHE_PROVIDER;
-
-	if (provider === "memory") {
-		instance = memoryCache;
-	} else {
+	if (getCacheProviderName() === "upstash") {
 		instance = upstashCache;
+	} else {
+		instance = memoryCache;
 	}
 
 	return instance;

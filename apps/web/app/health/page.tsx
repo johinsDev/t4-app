@@ -13,14 +13,13 @@ import { trpc } from "@/trpc/server";
 
 const serviceIcons: Record<string, React.ReactNode> = {
 	Database: <DatabaseIcon className="size-5" />,
-	Redis: <HardDriveIcon className="size-5" />,
+	Cache: <HardDriveIcon className="size-5" />,
 	"Vector DB": <SearchIcon className="size-5" />,
 	Search: <SearchIcon className="size-5" />,
 	Email: <MailIcon className="size-5" />,
 };
 
 const planned = [
-	{ name: "Redis", description: "Cache & sessions" },
 	{ name: "Vector DB", description: "Embeddings & similarity search" },
 	{ name: "Search", description: "Full-text search" },
 	{ name: "Email", description: "Transactional emails" },
