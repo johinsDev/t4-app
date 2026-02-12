@@ -1,4 +1,5 @@
 import { client } from "@/db";
+import { getCache, getCacheProviderName } from "@/lib/cache";
 import { baseProcedure, createTRPCRouter } from "../init";
 
 async function measure<T>(fn: () => Promise<T>) {
@@ -16,6 +17,24 @@ async function measure<T>(fn: () => Promise<T>) {
 }
 
 export const healthRouter = createTRPCRouter({
+	cache: baseProcedure.query(async () => {
+		const cache = getCache();
+		const provider = getCacheProviderName();
+		const { latencyMs, error } = await measure(async () => {
+			await cache.set("health:ping", "ok");
+			const value = await cache.get("health:ping");
+			if (value !== "ok") throw new Error("Cache read/write mismatch");
+			await cache.del("health:ping");
+		});
+		return {
+			name: "Cache" as const,
+			provider,
+			status: error ? ("error" as const) : ("ok" as const),
+			latencyMs,
+			error,
+			timestamp: new Date().toISOString(),
+		};
+	}),
 	db: baseProcedure.query(async () => {
 		const { latencyMs, error } = await measure(() => client.execute("SELECT 1"));
 		return {
@@ -28,11 +47,29 @@ export const healthRouter = createTRPCRouter({
 	}),
 
 	all: baseProcedure.query(async () => {
+		const cache = getCache();
+		const provider = getCacheProviderName();
 		const checks = await Promise.allSettled([
 			(async () => {
 				const { latencyMs, error } = await measure(() => client.execute("SELECT 1"));
 				return {
 					name: "Database" as const,
+					status: error ? ("error" as const) : ("ok" as const),
+					latencyMs,
+					error,
+					timestamp: new Date().toISOString(),
+				};
+			})(),
+			(async () => {
+				const { latencyMs, error } = await measure(async () => {
+					await cache.set("health:ping", "ok");
+					const value = await cache.get("health:ping");
+					if (value !== "ok") throw new Error("Cache read/write mismatch");
+					await cache.del("health:ping");
+				});
+				return {
+					name: "Cache" as const,
+					provider,
 					status: error ? ("error" as const) : ("ok" as const),
 					latencyMs,
 					error,
