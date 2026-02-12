@@ -10,7 +10,8 @@
 				"components/ui/*.tsx",
 				"hooks/*.ts",
 				"lib/utils.ts",
-				"trpc/*.{ts,tsx}"
+				"trpc/*.{ts,tsx}",
+				"db/**/*.ts"
 			],
 			"project": ["**/*.{ts,tsx,mjs}"],
 			"ignoreDependencies": [

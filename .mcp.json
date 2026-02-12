@@ -1,0 +1,24 @@
+{
+	"mcpServers": {
+		"vercel": {
+			"type": "http",
+			"url": "https://mcp.vercel.com"
+		},
+		"playwright": {
+			"command": "npx",
+			"args": ["@playwright/mcp@latest"]
+		},
+		"turso": {
+			"command": "sh",
+			"args": ["-c", "$HOME/.turso/tursodb apps/web/local.db --mcp"]
+		},
+		"turso-cloud": {
+			"command": "npx",
+			"args": ["-y", "mcp-turso-cloud"],
+			"env": {
+				"TURSO_API_TOKEN": "${TURSO_API_TOKEN}",
+				"TURSO_ORGANIZATION": "${TURSO_ORGANIZATION}"
+			}
+		}
+	}
+}
