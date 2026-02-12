@@ -1,19 +1,18 @@
-import { Redis } from "@upstash/redis";
 import { z } from "zod";
-import { baseProcedure, createTRPCRouter } from "../init";
 
-const redis = Redis.fromEnv();
+import { getCache } from "../../lib/cache";
+import { baseProcedure, createTRPCRouter } from "../init";
 
 export const appRouter = createTRPCRouter({
 	hello: baseProcedure.input(z.object({ text: z.string() })).query(({ input }) => {
 		return { greeting: `hello ${input.text}` };
 	}),
 
-	testRedis: baseProcedure.query(async () => {
-		await redis.set("test", "working");
-		const value = await redis.get("test");
-
-		return { redis: value };
+	health: baseProcedure.query(async () => {
+		const cache = getCache();
+		await cache.set("test", "working");
+		const value = await cache.get("test");
+		return value;
 	}),
 });
 
