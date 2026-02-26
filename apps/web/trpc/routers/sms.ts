@@ -3,18 +3,11 @@ import {
 	e164PhoneSchema,
 	getPreview,
 	listPreviews,
-	SMSManager,
 	smsContentSchema,
+	smsManager,
 	smsSegmentInfo,
 } from "@/lib/sms";
 import { baseProcedure, createTRPCRouter } from "../init";
-
-const manager = new SMSManager({
-	default: "json",
-	mailers: {
-		json: { provider: "json" as const },
-	},
-});
 
 export const smsRouter = createTRPCRouter({
 	sendTest: baseProcedure
@@ -25,7 +18,7 @@ export const smsRouter = createTRPCRouter({
 			}),
 		)
 		.mutation(async ({ input }) => {
-			const response = await manager.send((m) => {
+			const response = await smsManager.send((m) => {
 				m.to(input.to).content(input.content);
 			});
 			return response;

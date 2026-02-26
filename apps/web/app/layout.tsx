@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "@/components/ui/sonner";
 import { TRPCProvider } from "../trpc/client";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable}`}>
 				<TRPCProvider>{children}</TRPCProvider>
+				<Toaster />
 			</body>
 		</html>
 	);

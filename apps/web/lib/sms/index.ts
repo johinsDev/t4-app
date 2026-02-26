@@ -1,4 +1,5 @@
 export { BaseSms } from "./base-sms";
+export { smsManager } from "./config";
 export {
 	InvalidMessageError,
 	InvalidPhoneNumberError,
