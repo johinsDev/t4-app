@@ -29,6 +29,7 @@
 		"packages/*"
 	],
 	"dependencies": {
-		"@upstash/redis": "^1.36.2"
+		"@upstash/redis": "^1.36.2",
+		"react-phone-number-input": "^3.4.14"
 	}
 }

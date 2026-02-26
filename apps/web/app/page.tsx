@@ -1,90 +1,108 @@
-import Image, { type ImageProps } from "next/image";
+"use client";
+
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
-import styles from "./page.module.css";
+import {
+	Carousel,
+	type CarouselApi,
+	CarouselContent,
+	CarouselItem,
+} from "@/components/ui/carousel";
 
-type Props = Omit<ImageProps, "src"> & {
-	srcLight: string;
-	srcDark: string;
+const TOTAL_SLIDES = 3;
+
+const buttonLabel = (index: number) => {
+	if (index === TOTAL_SLIDES - 1) return "¡Empezar!";
+	return "Siguente";
 };
 
-const ThemeImage = (props: Props) => {
-	const { srcLight, srcDark, ...rest } = props;
+export default function OnboardingCarousel() {
+	const [api, setApi] = useState<CarouselApi | null>(null);
+	const [current, setCurrent] = useState(0);
+
+	const handleSetApi = useCallback((carouselApi: CarouselApi) => {
+		if (!carouselApi) return;
+		setApi(carouselApi);
+		carouselApi.on("select", () => {
+			setCurrent(carouselApi.selectedScrollSnap());
+		});
+	}, []);
+
+	const handleSkip = () => {
+		if (!api) return;
+		// Salta directo al último slide
+		api.scrollTo(TOTAL_SLIDES - 1);
+		// O si prefieres salir directamente sin ver el último slide:
+		// router.push("/home")
+	};
+
+	const handleNext = () => {
+		if (!api) return;
+		if (current === TOTAL_SLIDES - 1) {
+			return;
+		}
+		api.scrollNext();
+	};
 
 	return (
-		<>
-			<Image {...rest} src={srcLight} className="imgLight" />
-			<Image {...rest} src={srcDark} className="imgDark" />
-		</>
-	);
-};
+		<div className="flex flex-col items-center justify-center">
+			<Carousel setApi={handleSetApi} className="w-screen h-screen flex flex-col">
+				<CarouselContent>
+					<CarouselItem className="basis-full">
+						<div className="bg-[#14b8a6] p-6 text-center h-screen flex flex-col justify-center text-white">
+							<div className="text-8xl mb-8 font-sans animate-bounce duration-25 delay-100">🧋</div>
+							<h1 className="text-3xl font-bold mb-4 px-6">
+								Bienvenido a T4
+								<br />
+							</h1>
+							La mejor experiencia de té de burbujas en tu bolsillo.
+						</div>
+					</CarouselItem>
 
-export default function Home() {
-	return (
-		<div className={styles.page}>
-			<main className={styles.main}>
-				<ThemeImage
-					className={styles.logo}
-					srcLight="turborepo-dark.svg"
-					srcDark="turborepo-light.svg"
-					alt="Turborepo logo"
-					width={180}
-					height={38}
-					// priority
-				/>
-				<ol>
-					<li>
-						Get started by editing <code>apps/web/app/page.tsx</code>
-					</li>
-					<li>Save and see your changes instantly.</li>
-				</ol>
+					<CarouselItem className="basis-full">
+						<div className="bg-[#a855f7] p-6 text-center h-screen flex flex-col justify-center text-white">
+							<div className="text-8xl mb-8 font-sans animate-bounce duration-25 delay-100">🎫</div>
+							<h1 className="text-3xl font-bold mb-4 px-6">
+								Acumula Sellos
+								<br />
+							</h1>
+							Cada compra cuenta. Junta 10 y obtén una bebida GRATIS.
+						</div>
+					</CarouselItem>
 
-				<div className={styles.ctas}>
-					<a
-						className={styles.primary}
-						href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-						target="_blank"
-						rel="noopener noreferrer"
+					<CarouselItem className="basis-full">
+						<div className="bg-[#6366f1] p-6 text-center h-screen flex flex-col justify-center text-white">
+							<div className="text-8xl mb-8 font-sans animate-bounce duration-25 delay-100">🎁</div>
+							<h1 className="text-3xl font-bold mb-4 px-6">
+								Premios Exclusivos
+								<br />
+							</h1>
+							Ofertas flash, juegos y regalos solo para miembros
+						</div>
+					</CarouselItem>
+				</CarouselContent>
+
+				<div className="absolute bottom-30 left-0 right-0 flex justify-center">
+					<Button
+						onClick={handleNext}
+						className="h-[60px] w-[160px] bg-white text-black-400 text-xl font-bold rounded-full cursor-pointer transform-scale-1"
 					>
-						<Image
-							className={styles.logo}
-							src="/vercel.svg"
-							alt="Vercel logomark"
-							width={20}
-							height={20}
-						/>
-						Deploy now
-					</a>
-					<a
-						href="https://turborepo.dev/docs?utm_source"
-						target="_blank"
-						rel="noopener noreferrer"
-						className={styles.secondary}
-					>
-						Read our docs
-					</a>
+						{buttonLabel(current)}
+					</Button>
 				</div>
-				<Button variant="secondary" className={styles.secondary}>
-					Open alert
-				</Button>
-			</main>
-			<footer className={styles.footer}>
-				<a
-					href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-					Examples
-				</a>
-				<a
-					href="https://turborepo.dev?utm_source=create-turbo"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-					Go to turborepo.dev →
-				</a>
-			</footer>
+
+				{current < TOTAL_SLIDES - 1 && (
+					<div className="absolute bottom-20 left-0 right-0 flex justify-center">
+						<Button
+							onClick={handleSkip}
+							variant="ghost"
+							className="text-white/70 hover:text-white hover:bg-white/10 hover:font-bold text-sm font-medium cursor-pointer"
+						>
+							Saltar
+						</Button>
+					</div>
+				)}
+			</Carousel>
 		</div>
 	);
 }
