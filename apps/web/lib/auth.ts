@@ -4,7 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { phoneNumber } from "better-auth/plugins";
 import { db } from "@/db";
 import { env } from "@/env";
-import { smsManager } from "@/lib/sms";
+import { whatsappManager } from "@/lib/whatsapp";
 
 export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,
@@ -19,8 +19,18 @@ export const auth = betterAuth({
 	plugins: [
 		phoneNumber({
 			sendOTP: async ({ phoneNumber: phone, code }) => {
-				await smsManager.send((m) => {
-					m.to(phone).content(`Your code is: ${code} to verify your account on ${env.APP_NAME}`);
+				await whatsappManager.send((m) => {
+					m.to(phone);
+
+					m.emoji("lock")
+						.content(" ")
+						.bold(code)
+						.content(` is your verification code for ${env.APP_NAME}.`)
+						.line()
+						.line()
+						.italic("This code expires in 5 minutes.")
+						.line()
+						.content("Visit https://google.com to verify your account.");
 				});
 			},
 			signUpOnVerification: {

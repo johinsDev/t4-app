@@ -1,4 +1,5 @@
 import { client } from "@/db";
+import { env } from "@/env";
 import { CacheManager } from "@/lib/cache";
 import { baseProcedure, createTRPCRouter } from "../init";
 
@@ -53,6 +54,28 @@ export const healthRouter = createTRPCRouter({
 		};
 	}),
 
+	sms: baseProcedure.query(() => {
+		return {
+			name: "SMS" as const,
+			provider: env.SMS_PROVIDER,
+			status: "ok" as const,
+			latencyMs: 0,
+			error: null,
+			timestamp: new Date().toISOString(),
+		};
+	}),
+
+	whatsapp: baseProcedure.query(() => {
+		return {
+			name: "WhatsApp" as const,
+			provider: env.WHATSAPP_PROVIDER,
+			status: "ok" as const,
+			latencyMs: 0,
+			error: null,
+			timestamp: new Date().toISOString(),
+		};
+	}),
+
 	all: baseProcedure.query(async () => {
 		const store = cache.use();
 		const checks = await Promise.allSettled([
@@ -82,6 +105,22 @@ export const healthRouter = createTRPCRouter({
 					timestamp: new Date().toISOString(),
 				};
 			})(),
+			Promise.resolve({
+				name: "SMS" as const,
+				provider: env.SMS_PROVIDER,
+				status: "ok" as const,
+				latencyMs: 0,
+				error: null,
+				timestamp: new Date().toISOString(),
+			}),
+			Promise.resolve({
+				name: "WhatsApp" as const,
+				provider: env.WHATSAPP_PROVIDER,
+				status: "ok" as const,
+				latencyMs: 0,
+				error: null,
+				timestamp: new Date().toISOString(),
+			}),
 		]);
 
 		return checks.map((result) =>

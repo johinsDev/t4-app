@@ -11,6 +11,7 @@
 				"hooks/*.ts",
 				"lib/utils.ts",
 				"lib/sms/index.ts",
+				"lib/whatsapp/index.ts",
 				"lib/cache/index.ts",
 				"lib/auth-server.ts",
 				"trpc/*.{ts,tsx}",

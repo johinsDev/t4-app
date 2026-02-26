@@ -5,7 +5,9 @@ import {
 	DatabaseIcon,
 	HardDriveIcon,
 	MailIcon,
+	MessageCircleIcon,
 	SearchIcon,
+	SmartphoneIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +16,8 @@ import { trpc } from "@/trpc/server";
 const serviceIcons: Record<string, React.ReactNode> = {
 	Database: <DatabaseIcon className="size-5" />,
 	Cache: <HardDriveIcon className="size-5" />,
+	SMS: <SmartphoneIcon className="size-5" />,
+	WhatsApp: <MessageCircleIcon className="size-5" />,
 	"Vector DB": <SearchIcon className="size-5" />,
 	Search: <SearchIcon className="size-5" />,
 	Email: <MailIcon className="size-5" />,
