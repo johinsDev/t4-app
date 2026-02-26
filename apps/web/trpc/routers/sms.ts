@@ -11,7 +11,7 @@ import { baseProcedure, createTRPCRouter } from "../init";
 
 const manager = new SMSManager({
 	default: "json",
-	config: {
+	mailers: {
 		json: { provider: "json" as const },
 	},
 });

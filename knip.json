@@ -12,6 +12,7 @@
 				"lib/utils.ts",
 				"lib/sms/index.ts",
 				"lib/sms/messages/*.ts",
+				"lib/cache/index.ts",
 				"trpc/*.{ts,tsx}",
 				"db/**/*.ts"
 			],

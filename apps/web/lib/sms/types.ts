@@ -1,3 +1,5 @@
+import type { SMSMessage } from "./sms-message";
+
 export interface SMSMessageData {
 	to: string;
 	from?: string;
@@ -29,18 +31,18 @@ export interface JsonProviderConfig {
 
 export type ProviderConfig = TwilioProviderConfig | JsonProviderConfig;
 
+export type LogLevel = "debug" | "info" | "silent";
+
 export interface SMSManagerConfig<T extends Record<string, ProviderConfig>> {
 	default: keyof T & string;
-	config: T;
+	mailers: T;
+	logLevel?: LogLevel;
 }
 
-export interface SMSJob {
-	id: string;
-	mailer: string;
-	message: SMSMessageData;
-	createdAt: string;
-	sourceClass?: string;
-}
+/**
+ * Callback to compose an SMS message inline
+ */
+export type SMSComposeCallback = (message: SMSMessage) => void | Promise<void>;
 
 export interface SMSPreview {
 	id: string;

@@ -1,22 +1,47 @@
 import type { CacheProvider } from "../types";
 
-const store = new Map<string, string>();
+interface Entry {
+	value: string;
+	expiresAt?: number;
+}
 
-export const memoryCache: CacheProvider = {
-	async get<T = string>(key: string): Promise<T | null> {
-		const value = store.get(key);
-		return (value ? JSON.parse(value) : null) as T | null;
-	},
+/**
+ * In-memory cache provider with TTL support.
+ * Expired entries are cleaned up lazily on access.
+ */
+export class MemoryProvider implements CacheProvider {
+	readonly name = "memory";
+	readonly #store = new Map<string, Entry>();
 
-	async set(key: string, value: string): Promise<void> {
-		store.set(key, JSON.stringify(value));
-	},
+	async get(key: string): Promise<string | null> {
+		const entry = this.#store.get(key);
+		if (!entry) return null;
 
-	async del(key) {
-		store.delete(key);
-	},
+		if (entry.expiresAt && Date.now() > entry.expiresAt) {
+			this.#store.delete(key);
+			return null;
+		}
 
-	async has(key) {
-		return store.has(key);
-	},
-};
+		return entry.value;
+	}
+
+	async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
+		this.#store.set(key, {
+			value,
+			expiresAt: ttlSeconds ? Date.now() + ttlSeconds * 1000 : undefined,
+		});
+	}
+
+	async delete(key: string): Promise<void> {
+		this.#store.delete(key);
+	}
+
+	async has(key: string): Promise<boolean> {
+		const value = await this.get(key);
+		return value !== null;
+	}
+
+	async flush(): Promise<void> {
+		this.#store.clear();
+	}
+}

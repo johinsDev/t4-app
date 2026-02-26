@@ -1,21 +1,14 @@
-import { memoryCache } from "./providers/memory";
-import { upstashCache } from "./providers/upstash";
-import type { CacheProvider } from "./types";
-
-let instance: CacheProvider | null = null;
-
-export function getCacheProviderName(): "upstash" | "memory" {
-	return process.env.CACHE_PROVIDER === "upstash" ? "upstash" : "memory";
-}
-
-export function getCache(): CacheProvider {
-	if (instance) return instance;
-
-	if (getCacheProviderName() === "upstash") {
-		instance = upstashCache;
-	} else {
-		instance = memoryCache;
-	}
-
-	return instance;
-}
+export { CacheManager } from "./cache-manager";
+export { CacheStore } from "./cache-store";
+export { CacheError, ProviderError } from "./errors";
+export { FakeStore } from "./fake-store";
+export { MemoryProvider, RedisProvider, UpstashProvider } from "./providers";
+export type {
+	CacheManagerConfig,
+	CacheProvider,
+	LogLevel,
+	MemoryProviderConfig,
+	ProviderConfig,
+	RedisProviderConfig,
+	UpstashProviderConfig,
+} from "./types";
