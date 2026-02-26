@@ -32,6 +32,9 @@ yarn-error.log*
 # local database
 *.db
 
+# SMS preview files (dev only)
+.sms-previews
+
 # vercel
 .vercel
 

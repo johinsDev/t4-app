@@ -10,6 +10,7 @@
 				"components/ui/*.tsx",
 				"hooks/*.ts",
 				"lib/utils.ts",
+				"lib/sms/index.ts",
 				"trpc/*.{ts,tsx}",
 				"db/**/*.ts"
 			],
