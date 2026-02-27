@@ -38,7 +38,7 @@
 		}
 	},
 	"files": {
-		"includes": ["**", "!!**/.next", "!!**/dist", "!!**/bun.lock", "!!**/.turbo"]
+		"includes": ["**", "!!**/.next", "!!**/dist", "!!**/bun.lock", "!!**/.turbo", "!!**/.trigger"]
 	},
 	"overrides": [
 		{

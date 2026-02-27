@@ -20,7 +20,9 @@
 				"lib/rate-limit/index.ts",
 				"lib/auth-server.ts",
 				"trpc/*.{ts,tsx}",
-				"db/**/*.ts"
+				"db/**/*.ts",
+				"trigger/**/*.ts",
+				"trigger.config.ts"
 			],
 			"project": ["**/*.{ts,tsx,mjs}"],
 			"ignoreDependencies": [

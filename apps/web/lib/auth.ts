@@ -4,7 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { phoneNumber } from "better-auth/plugins";
 import { db } from "@/db";
 import { env } from "@/env";
-import { whatsappManager } from "@/lib/whatsapp";
+import { sendOtpWhatsAppJob } from "@/trigger";
 
 export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,
@@ -19,19 +19,7 @@ export const auth = betterAuth({
 	plugins: [
 		phoneNumber({
 			sendOTP: async ({ phoneNumber: phone, code }) => {
-				await whatsappManager.send((m) => {
-					m.to(phone);
-
-					m.emoji("lock")
-						.content(" ")
-						.bold(code)
-						.content(` is your verification code for ${env.APP_NAME}.`)
-						.line()
-						.line()
-						.italic("This code expires in 5 minutes.")
-						.line()
-						.content("Visit https://google.com to verify your account.");
-				});
+				await sendOtpWhatsAppJob({ to: phone, code, appName: env.APP_NAME });
 			},
 			signUpOnVerification: {
 				getTempEmail: (phone) => `${phone.replace(/\D/g, "")}@phone.internal`,
