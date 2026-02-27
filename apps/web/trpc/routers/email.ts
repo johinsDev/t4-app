@@ -9,10 +9,10 @@ import {
 	getPreview,
 	listPreviews,
 } from "@/lib/email";
-import { baseProcedure, createTRPCRouter } from "../init";
+import { createTRPCRouter, publicMutation, publicQuery } from "../init";
 
 export const emailRouter = createTRPCRouter({
-	sendTest: baseProcedure
+	sendTest: publicMutation
 		.input(
 			z.object({
 				to: emailAddressSchema,
@@ -27,7 +27,7 @@ export const emailRouter = createTRPCRouter({
 			return response;
 		}),
 
-	sendWelcome: baseProcedure
+	sendWelcome: publicMutation
 		.input(
 			z.object({
 				to: emailAddressSchema,
@@ -42,11 +42,11 @@ export const emailRouter = createTRPCRouter({
 			return response;
 		}),
 
-	listPreviews: baseProcedure.query(() => {
+	listPreviews: publicQuery.query(() => {
 		return listPreviews();
 	}),
 
-	getPreview: baseProcedure.input(z.object({ id: z.string() })).query(({ input }) => {
+	getPreview: publicQuery.input(z.object({ id: z.string() })).query(({ input }) => {
 		return getPreview(input.id);
 	}),
 });

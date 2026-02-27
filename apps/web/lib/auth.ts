@@ -4,6 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { phoneNumber } from "better-auth/plugins";
 import { db } from "@/db";
 import { env } from "@/env";
+import { cacheManager } from "@/lib/cache";
 import { sendOtpWhatsAppJob } from "@/trigger";
 
 export const auth = betterAuth({
@@ -14,6 +15,30 @@ export const auth = betterAuth({
 		google: {
 			clientId: env.GOOGLE_CLIENT_ID,
 			clientSecret: env.GOOGLE_CLIENT_SECRET,
+		},
+	},
+	rateLimit: {
+		enabled: true,
+		window: 60,
+		max: 10,
+		customRules: {
+			"/sign-in/*": { window: 10, max: 3 },
+			"/sign-up/*": { window: 10, max: 3 },
+			"/phone-number/send-otp": { window: 60, max: 3 },
+			"/get-session": false,
+		},
+		customStorage: {
+			get: async (key) => {
+				const data = await cacheManager.get<{
+					key: string;
+					count: number;
+					lastRequest: number;
+				}>(`rl:${key}`);
+				return data ?? null;
+			},
+			set: async (key, value) => {
+				await cacheManager.set(`rl:${key}`, value, 120);
+			},
 		},
 	},
 	plugins: [

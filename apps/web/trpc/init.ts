@@ -28,23 +28,29 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 	return next({ ctx: { session: ctx.session as Session } });
 });
 
-const rateLimitMiddleware = t.middleware(async ({ ctx, path, next }) => {
-	const ip =
-		ctx.headers?.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-		ctx.headers?.get("x-real-ip") ??
-		"127.0.0.1";
-	const key = `${ip}:${path}`;
-	const result = await rateLimitManager.limit(key, "api/trpc");
+const createRateLimitMiddleware = (ruleKey: string) =>
+	t.middleware(async ({ ctx, path, next }) => {
+		const ip =
+			ctx.headers?.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+			ctx.headers?.get("x-real-ip") ??
+			"127.0.0.1";
+		const key = `${ip}:${path}`;
+		const result = await rateLimitManager.limit(key, ruleKey);
 
-	if (!result.success) {
-		throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-	}
+		if (!result.success) {
+			throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+		}
 
-	return next();
-});
+		return next();
+	});
 
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
 export const baseProcedure = t.procedure.use(loggingMiddleware);
 export const authedProcedure = baseProcedure.use(authMiddleware);
-export const rateLimitedProcedure = baseProcedure.use(rateLimitMiddleware);
+export const publicQuery = baseProcedure.use(createRateLimitMiddleware("api/trpc:query"));
+export const publicMutation = baseProcedure.use(createRateLimitMiddleware("api/trpc:mutation"));
+export const protectedQuery = authedProcedure.use(createRateLimitMiddleware("api/trpc:query"));
+export const protectedMutation = authedProcedure.use(
+	createRateLimitMiddleware("api/trpc:mutation"),
+);

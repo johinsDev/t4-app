@@ -18,5 +18,7 @@ export const rateLimitManager = new RateLimitManager({
 		default: { limit: 60, window: "60s" },
 		"api/auth": { limit: 10, window: "60s" },
 		"api/trpc": { limit: 30, window: "60s" },
+		"api/trpc:query": { limit: 60, window: "60s" },
+		"api/trpc:mutation": { limit: 10, window: "60s" },
 	},
 });
