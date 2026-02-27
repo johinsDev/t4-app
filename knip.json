@@ -12,6 +12,8 @@
 				"lib/utils.ts",
 				"lib/sms/index.ts",
 				"lib/whatsapp/index.ts",
+				"lib/email/index.ts",
+				"emails/**/*.tsx",
 				"lib/cache/index.ts",
 				"lib/auth-server.ts",
 				"trpc/*.{ts,tsx}",
@@ -19,6 +21,7 @@
 			],
 			"project": ["**/*.{ts,tsx,mjs}"],
 			"ignoreDependencies": [
+				"@react-email/preview-server",
 				"client-only",
 				"date-fns",
 				"postcss",

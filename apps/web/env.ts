@@ -3,6 +3,15 @@ import { z } from "zod";
 
 const smsProvider = z.enum(["json", "twilio"]).default("json");
 const whatsappProvider = z.enum(["json", "twilio"]).default("json");
+const emailProvider = z.enum(["json", "resend"]).default("json");
+
+const resendRequired = (field: string) =>
+	z
+		.string()
+		.optional()
+		.refine((val) => process.env.EMAIL_PROVIDER !== "resend" || (val && val.length > 0), {
+			message: `${field} is required when EMAIL_PROVIDER=resend`,
+		});
 
 const twilioRequired = (field: string) =>
 	z
@@ -35,6 +44,9 @@ export const env = createEnv({
 		TWILIO_PHONE_NUMBER: twilioRequired("TWILIO_PHONE_NUMBER"),
 		WHATSAPP_PROVIDER: whatsappProvider,
 		TWILIO_WHATSAPP_NUMBER: twilioWhatsAppRequired("TWILIO_WHATSAPP_NUMBER"),
+		EMAIL_PROVIDER: emailProvider,
+		RESEND_API_KEY: resendRequired("RESEND_API_KEY"),
+		EMAIL_FROM: z.string().default("onboarding@resend.dev"),
 	},
 	experimental__runtimeEnv: process.env,
 });

@@ -44,9 +44,11 @@ export const healthRouter = createTRPCRouter({
 	}),
 
 	db: baseProcedure.query(async () => {
+		const provider = env.DATABASE_URL.startsWith("file:") ? "sqlite" : "turso";
 		const { latencyMs, error } = await measure(() => client.execute("SELECT 1"));
 		return {
 			name: "Database" as const,
+			provider,
 			status: error ? ("error" as const) : ("ok" as const),
 			latencyMs,
 			error,
@@ -76,13 +78,26 @@ export const healthRouter = createTRPCRouter({
 		};
 	}),
 
+	email: baseProcedure.query(() => {
+		return {
+			name: "Email" as const,
+			provider: env.EMAIL_PROVIDER,
+			status: "ok" as const,
+			latencyMs: 0,
+			error: null,
+			timestamp: new Date().toISOString(),
+		};
+	}),
+
 	all: baseProcedure.query(async () => {
 		const store = cache.use();
 		const checks = await Promise.allSettled([
 			(async () => {
+				const provider = env.DATABASE_URL.startsWith("file:") ? "sqlite" : "turso";
 				const { latencyMs, error } = await measure(() => client.execute("SELECT 1"));
 				return {
 					name: "Database" as const,
+					provider,
 					status: error ? ("error" as const) : ("ok" as const),
 					latencyMs,
 					error,
@@ -116,6 +131,14 @@ export const healthRouter = createTRPCRouter({
 			Promise.resolve({
 				name: "WhatsApp" as const,
 				provider: env.WHATSAPP_PROVIDER,
+				status: "ok" as const,
+				latencyMs: 0,
+				error: null,
+				timestamp: new Date().toISOString(),
+			}),
+			Promise.resolve({
+				name: "Email" as const,
+				provider: env.EMAIL_PROVIDER,
 				status: "ok" as const,
 				latencyMs: 0,
 				error: null,

@@ -26,7 +26,6 @@ const serviceIcons: Record<string, React.ReactNode> = {
 const planned = [
 	{ name: "Vector DB", description: "Embeddings & similarity search" },
 	{ name: "Search", description: "Full-text search" },
-	{ name: "Email", description: "Transactional emails" },
 ];
 
 export default async function HealthDashboard() {
