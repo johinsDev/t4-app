@@ -1,14 +1,8 @@
 import { client } from "@/db";
 import { env } from "@/env";
-import { CacheManager } from "@/lib/cache";
+import { cacheManager } from "@/lib/cache";
+import { rateLimitManager } from "@/lib/rate-limit";
 import { baseProcedure, createTRPCRouter } from "../init";
-
-const cache = new CacheManager({
-	default: "memory",
-	stores: {
-		memory: { provider: "memory" as const },
-	},
-});
 
 async function measure<T>(fn: () => Promise<T>) {
 	const start = performance.now();
@@ -26,7 +20,7 @@ async function measure<T>(fn: () => Promise<T>) {
 
 export const healthRouter = createTRPCRouter({
 	cache: baseProcedure.query(async () => {
-		const store = cache.use();
+		const store = cacheManager.use();
 		const { latencyMs, error } = await measure(async () => {
 			await store.set("health:ping", "ok");
 			const value = await store.get("health:ping");
@@ -89,8 +83,25 @@ export const healthRouter = createTRPCRouter({
 		};
 	}),
 
+	rateLimit: baseProcedure.query(async () => {
+		const store = rateLimitManager.use();
+		const { latencyMs, error } = await measure(async () => {
+			const result = await store.limit("health:ping", { limit: 1000, window: "60s" });
+			if (!result.success) throw new Error("Rate limit check failed");
+		});
+		return {
+			name: "Rate Limit" as const,
+			provider: store.name,
+			status: error ? ("error" as const) : ("ok" as const),
+			latencyMs,
+			error,
+			timestamp: new Date().toISOString(),
+		};
+	}),
+
 	all: baseProcedure.query(async () => {
-		const store = cache.use();
+		const store = cacheManager.use();
+		const rlStore = rateLimitManager.use();
 		const checks = await Promise.allSettled([
 			(async () => {
 				const provider = env.DATABASE_URL.startsWith("file:") ? "sqlite" : "turso";
@@ -114,6 +125,23 @@ export const healthRouter = createTRPCRouter({
 				return {
 					name: "Cache" as const,
 					provider: store.name,
+					status: error ? ("error" as const) : ("ok" as const),
+					latencyMs,
+					error,
+					timestamp: new Date().toISOString(),
+				};
+			})(),
+			(async () => {
+				const { latencyMs, error } = await measure(async () => {
+					const result = await rlStore.limit("health:ping", {
+						limit: 1000,
+						window: "60s",
+					});
+					if (!result.success) throw new Error("Rate limit check failed");
+				});
+				return {
+					name: "Rate Limit" as const,
+					provider: rlStore.name,
 					status: error ? ("error" as const) : ("ok" as const),
 					latencyMs,
 					error,

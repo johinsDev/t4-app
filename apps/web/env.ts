@@ -5,6 +5,31 @@ const smsProvider = z.enum(["json", "twilio"]).default("json");
 const whatsappProvider = z.enum(["json", "twilio"]).default("json");
 const emailProvider = z.enum(["json", "resend"]).default("json");
 
+const cacheProvider = z.enum(["memory", "upstash", "redis"]).default("memory");
+const rateLimitProvider = z.enum(["memory", "upstash"]).default("memory");
+
+const upstashRequired = (field: string) =>
+	z
+		.string()
+		.optional()
+		.refine(
+			(val) =>
+				(process.env.CACHE_PROVIDER !== "upstash" &&
+					process.env.RATE_LIMIT_PROVIDER !== "upstash") ||
+				(val && val.length > 0),
+			{
+				message: `${field} is required when CACHE_PROVIDER=upstash or RATE_LIMIT_PROVIDER=upstash`,
+			},
+		);
+
+const redisRequired = (field: string) =>
+	z
+		.string()
+		.optional()
+		.refine((val) => process.env.CACHE_PROVIDER !== "redis" || (val && val.length > 0), {
+			message: `${field} is required when CACHE_PROVIDER=redis`,
+		});
+
 const resendRequired = (field: string) =>
 	z
 		.string()
@@ -47,6 +72,11 @@ export const env = createEnv({
 		EMAIL_PROVIDER: emailProvider,
 		RESEND_API_KEY: resendRequired("RESEND_API_KEY"),
 		EMAIL_FROM: z.string().default("onboarding@resend.dev"),
+		CACHE_PROVIDER: cacheProvider,
+		RATE_LIMIT_PROVIDER: rateLimitProvider,
+		UPSTASH_REDIS_REST_URL: upstashRequired("UPSTASH_REDIS_REST_URL"),
+		UPSTASH_REDIS_REST_TOKEN: upstashRequired("UPSTASH_REDIS_REST_TOKEN"),
+		REDIS_URL: redisRequired("REDIS_URL"),
 	},
 	experimental__runtimeEnv: process.env,
 });

@@ -1,7 +1,9 @@
 {
 	"$schema": "https://unpkg.com/knip@5/schema.json",
 	"workspaces": {
-		".": {},
+		".": {
+			"ignoreDependencies": ["@upstash/redis"]
+		},
 		"apps/web": {
 			"entry": [
 				"app/**/page.tsx",
@@ -15,6 +17,7 @@
 				"lib/email/index.ts",
 				"emails/**/*.tsx",
 				"lib/cache/index.ts",
+				"lib/rate-limit/index.ts",
 				"lib/auth-server.ts",
 				"trpc/*.{ts,tsx}",
 				"db/**/*.ts"

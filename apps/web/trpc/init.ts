@@ -2,10 +2,11 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { cache } from "react";
 import { db } from "@/db";
 import { auth, type Session } from "@/lib/auth";
+import { rateLimitManager } from "@/lib/rate-limit";
 
 export const createTRPCContext = cache(async (opts?: { headers?: Headers }) => {
 	const session = opts?.headers ? await auth.api.getSession({ headers: opts.headers }) : null;
-	return { db, session };
+	return { db, session, headers: opts?.headers };
 });
 
 type Context = Awaited<ReturnType<typeof createTRPCContext>>;
@@ -27,25 +28,17 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 	return next({ ctx: { session: ctx.session as Session } });
 });
 
-const WINDOW_MS = 60_000;
-const MAX_REQUESTS = 20;
-const hits = new Map<string, number[]>();
-
 const rateLimitMiddleware = t.middleware(async ({ ctx, path, next }) => {
-	const userId = ctx.session?.user?.id ?? "anon";
-	const key = `${userId}:${path}`;
-	const now = Date.now();
+	const ip =
+		ctx.headers?.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+		ctx.headers?.get("x-real-ip") ??
+		"127.0.0.1";
+	const key = `${ip}:${path}`;
+	const result = await rateLimitManager.limit(key, "api/trpc");
 
-	const timestamps = hits.get(key) ?? [];
-	const windowStart = now - WINDOW_MS;
-	const recent = timestamps.filter((ts) => ts > windowStart);
-
-	if (recent.length >= MAX_REQUESTS) {
+	if (!result.success) {
 		throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 	}
-
-	recent.push(now);
-	hits.set(key, recent);
 
 	return next();
 });

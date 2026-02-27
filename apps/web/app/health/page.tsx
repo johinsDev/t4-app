@@ -7,6 +7,7 @@ import {
 	MailIcon,
 	MessageCircleIcon,
 	SearchIcon,
+	ShieldIcon,
 	SmartphoneIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,7 @@ const serviceIcons: Record<string, React.ReactNode> = {
 	"Vector DB": <SearchIcon className="size-5" />,
 	Search: <SearchIcon className="size-5" />,
 	Email: <MailIcon className="size-5" />,
+	"Rate Limit": <ShieldIcon className="size-5" />,
 };
 
 const planned = [
