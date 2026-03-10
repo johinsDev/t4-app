@@ -20,7 +20,7 @@ const jsonProviderConfigSchema = z.object({
 	provider: z.literal("json"),
 });
 
-const providerConfigSchema = z.discriminatedUnion("provider", [
+const _providerConfigSchema = z.discriminatedUnion("provider", [
 	twilioProviderConfigSchema,
 	jsonProviderConfigSchema,
 ]);

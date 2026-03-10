@@ -15,6 +15,13 @@
 			"when": 1772124220636,
 			"tag": "0001_optimal_fabian_cortez",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1772238143268,
+			"tag": "0002_dashing_ulik",
+			"breakpoints": true
 		}
 	]
 }
