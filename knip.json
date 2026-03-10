@@ -15,6 +15,7 @@
 				"lib/sms/index.ts",
 				"lib/whatsapp/index.ts",
 				"lib/email/index.ts",
+				"lib/partykit/index.ts",
 				"emails/**/*.tsx",
 				"lib/cache/index.ts",
 				"lib/rate-limit/index.ts",
@@ -34,6 +35,10 @@
 				"tailwindcss",
 				"tw-animate-css"
 			]
+		},
+		"apps/partykit": {
+			"entry": ["src/parties/*.ts"],
+			"project": ["src/**/*.ts"]
 		},
 		"packages/typescript-config": {
 			"entry": [],

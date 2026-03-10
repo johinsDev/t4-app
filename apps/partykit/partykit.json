@@ -1,0 +1,5 @@
+{
+	"name": "t4-app",
+	"main": "src/parties/loyalty.ts",
+	"compatibilityDate": "2024-12-01"
+}

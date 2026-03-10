@@ -78,6 +78,9 @@ export const env = createEnv({
 		UPSTASH_REDIS_REST_TOKEN: upstashRequired("UPSTASH_REDIS_REST_TOKEN"),
 		REDIS_URL: redisRequired("REDIS_URL"),
 		TRIGGER_SECRET_KEY: z.string().optional(),
+		PARTYKIT_JWT_SECRET: z.string().min(32),
+		PARTYKIT_API_SECRET: z.string().min(16),
+		PARTYKIT_HOST: z.string().min(1),
 	},
 	experimental__runtimeEnv: process.env,
 });

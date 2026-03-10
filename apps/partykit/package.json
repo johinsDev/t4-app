@@ -1,0 +1,20 @@
+{
+	"name": "partykit-server",
+	"version": "0.1.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev:partykit": "partykit dev",
+		"deploy": "partykit deploy",
+		"check-types": "tsc --noEmit"
+	},
+	"dependencies": {
+		"partykit": "latest",
+		"jose": "^6.0.11",
+		"@repo/realtime-types": "*"
+	},
+	"devDependencies": {
+		"@repo/typescript-config": "*",
+		"typescript": "5.9.2"
+	}
+}
