@@ -7,6 +7,7 @@ const emailProvider = z.enum(["json", "resend"]).default("json");
 
 const cacheProvider = z.enum(["memory", "upstash", "redis"]).default("memory");
 const rateLimitProvider = z.enum(["memory", "upstash"]).default("memory");
+const storageProvider = z.enum(["local", "r2"]).default("local");
 
 const upstashRequired = (field: string) =>
 	z
@@ -54,6 +55,14 @@ const twilioWhatsAppRequired = (field: string) =>
 			message: `${field} is required when WHATSAPP_PROVIDER=twilio`,
 		});
 
+const r2Required = (field: string) =>
+	z
+		.string()
+		.optional()
+		.refine((val) => process.env.STORAGE_PROVIDER !== "r2" || (val && val.length > 0), {
+			message: `${field} is required when STORAGE_PROVIDER=r2`,
+		});
+
 export const env = createEnv({
 	server: {
 		APP_NAME: z.string().min(1),
@@ -77,6 +86,11 @@ export const env = createEnv({
 		UPSTASH_REDIS_REST_URL: upstashRequired("UPSTASH_REDIS_REST_URL"),
 		UPSTASH_REDIS_REST_TOKEN: upstashRequired("UPSTASH_REDIS_REST_TOKEN"),
 		REDIS_URL: redisRequired("REDIS_URL"),
+		STORAGE_PROVIDER: storageProvider,
+		R2_ACCOUNT_ID: r2Required("R2_ACCOUNT_ID"),
+		R2_ACCESS_KEY_ID: r2Required("R2_ACCESS_KEY_ID"),
+		R2_SECRET_ACCESS_KEY: r2Required("R2_SECRET_ACCESS_KEY"),
+		R2_PUBLIC_URL: z.string().optional(),
 		TRIGGER_SECRET_KEY: z.string().optional(),
 		PARTYKIT_JWT_SECRET: z.string().min(32),
 		PARTYKIT_API_SECRET: z.string().min(16),

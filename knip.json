@@ -18,6 +18,8 @@
 				"lib/partykit/index.ts",
 				"emails/**/*.tsx",
 				"lib/cache/index.ts",
+				"lib/storage/index.ts",
+				"components/file-upload.tsx",
 				"lib/rate-limit/index.ts",
 				"lib/auth-server.ts",
 				"trpc/*.{ts,tsx}",

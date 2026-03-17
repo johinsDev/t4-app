@@ -2,6 +2,7 @@ import { client } from "@/db";
 import { env } from "@/env";
 import { cacheManager } from "@/lib/cache";
 import { rateLimitManager } from "@/lib/rate-limit";
+import { storageManager } from "@/lib/storage";
 import { createTRPCRouter, publicQuery } from "../init";
 
 async function measure<T>(fn: () => Promise<T>) {
@@ -83,6 +84,24 @@ export const healthRouter = createTRPCRouter({
 		};
 	}),
 
+	storage: publicQuery.query(async () => {
+		const disk = storageManager.use();
+		const { latencyMs, error } = await measure(async () => {
+			await disk.put("health:ping", Buffer.from("ok"));
+			const file = await disk.get("health:ping");
+			if (!file || file.body.toString() !== "ok") throw new Error("Storage read/write mismatch");
+			await disk.delete("health:ping");
+		});
+		return {
+			name: "Storage" as const,
+			provider: disk.name,
+			status: error ? ("error" as const) : ("ok" as const),
+			latencyMs,
+			error,
+			timestamp: new Date().toISOString(),
+		};
+	}),
+
 	rateLimit: publicQuery.query(async () => {
 		const store = rateLimitManager.use();
 		const { latencyMs, error } = await measure(async () => {
@@ -102,6 +121,7 @@ export const healthRouter = createTRPCRouter({
 	all: publicQuery.query(async () => {
 		const store = cacheManager.use();
 		const rlStore = rateLimitManager.use();
+		const storageDisk = storageManager.use();
 		const checks = await Promise.allSettled([
 			(async () => {
 				const provider = env.DATABASE_URL.startsWith("file:") ? "sqlite" : "turso";
@@ -172,6 +192,23 @@ export const healthRouter = createTRPCRouter({
 				error: null,
 				timestamp: new Date().toISOString(),
 			}),
+			(async () => {
+				const { latencyMs, error } = await measure(async () => {
+					await storageDisk.put("health:ping", Buffer.from("ok"));
+					const file = await storageDisk.get("health:ping");
+					if (!file || file.body.toString() !== "ok")
+						throw new Error("Storage read/write mismatch");
+					await storageDisk.delete("health:ping");
+				});
+				return {
+					name: "Storage" as const,
+					provider: storageDisk.name,
+					status: error ? ("error" as const) : ("ok" as const),
+					latencyMs,
+					error,
+					timestamp: new Date().toISOString(),
+				};
+			})(),
 		]);
 
 		return checks.map((result) =>

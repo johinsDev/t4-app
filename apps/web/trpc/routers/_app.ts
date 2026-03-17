@@ -5,6 +5,7 @@ import { emailRouter } from "./email";
 import { healthRouter } from "./health";
 import { loyaltyRouter } from "./loyalty";
 import { smsRouter } from "./sms";
+import { storageRouter } from "./storage";
 import { whatsappRouter } from "./whatsapp";
 
 export const appRouter = createTRPCRouter({
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
 	health: healthRouter,
 	loyalty: loyaltyRouter,
 	sms: smsRouter,
+	storage: storageRouter,
 	whatsapp: whatsappRouter,
 	email: emailRouter,
 });
